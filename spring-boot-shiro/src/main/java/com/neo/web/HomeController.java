@@ -1,52 +1,95 @@
 package com.neo.web;
 
+import com.neo.entity.UserInfo;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-public class HomeController {
+public class HomeController extends BaseController{
     @RequestMapping({"/","/index"})
     public String index(){
         return"/index";
     }
 
     @RequestMapping("/login")
-    public String login(HttpServletRequest request, Map<String, Object> map) throws Exception{
+    @ResponseBody
+    public Object login(HttpServletRequest request, String username, String password) throws Exception{
         System.out.println("HomeController.login()");
-        // 登录失败从request中获取shiro处理的异常信息。
-        // shiroLoginFailure:就是shiro异常类的全类名.
-        String exception = (String) request.getAttribute("shiroLoginFailure");
-        System.out.println("exception=" + exception);
-        String msg = "";
-        if (exception != null) {
-            if (UnknownAccountException.class.getName().equals(exception)) {
-                System.out.println("UnknownAccountException -- > 账号不存在：");
-                msg = "UnknownAccountException -- > 账号不存在：";
-            } else if (IncorrectCredentialsException.class.getName().equals(exception)) {
-                System.out.println("IncorrectCredentialsException -- > 密码不正确：");
-                msg = "IncorrectCredentialsException -- > 密码不正确：";
-            } else if ("kaptchaValidateFailed".equals(exception)) {
-                System.out.println("kaptchaValidateFailed -- > 验证码错误");
-                msg = "kaptchaValidateFailed -- > 验证码错误";
-            } else {
-                msg = "else >> "+exception;
-                System.out.println("else -- >" + exception);
+        Map<String, Object> jsonObject = new HashMap();
+        Subject currentUser = SecurityUtils.getSubject();
+
+        try {
+            if (!currentUser.isAuthenticated()) {
+                UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+                //this is all you have to do to support 'remember me' (no config - built in!):
+//                token.setRememberMe(true);
+                currentUser.login(token);
+                //判断用户是否有角色
+//                if ( currentUser.hasRole( "schwartz" ) ) {
+//                    log.info("May the Schwartz be with you!" );
+//                } else {
+//                    log.info( "Hello, mere mortal." );
+//                }
+                //判断用户是否有权限
+//                if ( currentUser.isPermitted( "lightsaber:weild" ) ) {
+//                    log.info("You may use a lightsaber ring.  Use it wisely.");
+//                } else {
+//                    log.info("Sorry, lightsaber rings are for schwartz masters only.");
+//                }
+                //退出登录
+//                currentUser.logout();
+                UserInfo userinfo = (UserInfo)currentUser.getPrincipal();
+                Session session = currentUser.getSession();
+                session.setAttribute("currentUserInfo", userinfo);
+                session.setAttribute("currentUserID", userinfo.getUid());
+                session.setTimeout(1800000L);//毫秒
+                jsonObject.put("token", currentUser.getSession().getId());
+                jsonObject.put("msg", "登录成功");
             }
+        } catch (UnknownAccountException var9) {
+            var9.printStackTrace();
+            jsonObject.put("msg", "账户不存在！");
+        } catch (IncorrectCredentialsException var10) {
+            var10.printStackTrace();
+            jsonObject.put("msg", "密码不正确！");
+        } catch (LockedAccountException var11) {
+            var11.printStackTrace();
+            jsonObject.put("msg", "账户已锁定！");
+        } catch (Exception var12) {
+            var12.printStackTrace();
+            jsonObject.put("msg", "用户名或者密码错误！");
         }
-        map.put("msg", msg);
-        // 此方法不处理登录成功,由shiro进行处理
-        return "/login";
+
+        return jsonObject.toString();
     }
 
-    @RequestMapping("/403")
-    public String unauthorizedRole(){
-        System.out.println("------没有权限-------");
-        return "403";
+    @RequestMapping({"/unauth"})
+    @ResponseBody
+    public Object unauthorizedRole() {
+        Map<String, Object> map = new HashMap();
+        map.put("code", "1000001");
+        map.put("msg", "没有权限！");
+        return map;
     }
 
+    @RequestMapping({"/unlogin"})
+    @ResponseBody
+    public Object unauth() {
+        Map<String, Object> map = new HashMap();
+        map.put("code", "1000000");
+        map.put("msg", "未登录");
+        return map;
+    }
 }

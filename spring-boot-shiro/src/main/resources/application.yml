@@ -1,8 +1,8 @@
 spring:
     datasource:
-      url: jdbc:mysql://localhost:3306/test
-      username: root
-      password: root
+      url: jdbc:mysql://116.62.56.23:3306/paydb-dev?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC
+      username: xsy-test
+      password: Ov72ZzZqS33ox8xG0vqR
       #schema: database/import.sql
       #sql-script-encoding: utf-8
       driver-class-name: com.mysql.jdbc.Driver
@@ -17,7 +17,3 @@ spring:
       properties:
          hibernate:
             dialect: org.hibernate.dialect.MySQL5Dialect
-
-    thymeleaf:
-       cache: false
-       mode: LEGACYHTML5
