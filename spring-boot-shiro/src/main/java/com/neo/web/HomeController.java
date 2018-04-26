@@ -1,6 +1,7 @@
 package com.neo.web;
 
 import com.neo.entity.UserInfo;
+import com.neo.utils.RedisUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
@@ -8,25 +9,23 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
 @Controller
 public class HomeController extends BaseController{
-    @RequestMapping({"/","/index"})
-    public String index(){
-        return"/index";
-    }
+    private final static Logger log = LoggerFactory.getLogger(RedisUtil.class);
 
     @RequestMapping("/login")
     @ResponseBody
     public Object login(HttpServletRequest request, String username, String password) throws Exception{
-        System.out.println("HomeController.login()");
+        log.info("测试日志是否进来，登陆开始执行了。。。。。。。。。。。");
         Map<String, Object> jsonObject = new HashMap();
         Subject currentUser = SecurityUtils.getSubject();
 
