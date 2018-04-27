@@ -1,13 +1,10 @@
-package com.shinho.restaurant.pos.business.configuration;
+package com.neo.config;
 
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisCluster;
 
@@ -19,6 +16,7 @@ import java.util.Set;
  * @Description:
  * @Date: 2018/3/30
  */
+
 /**
  * Created by xiaxuan on 16/11/8.
  * 获取JedisCluster的配置

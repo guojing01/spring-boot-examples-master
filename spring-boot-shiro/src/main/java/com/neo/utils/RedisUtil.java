@@ -1,19 +1,18 @@
-package com.shinho.restaurant.pos.core.framework.utils;
-
-import java.util.List;
-import java.util.Set;
+package com.neo.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseBody;
-import redis.clients.jedis.*;
+import redis.clients.jedis.JedisCluster;
+import java.util.List;
+import java.util.Set;
 
+@Component
 public class RedisUtil {
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(RedisUtil.class);
-//	@Resource
-//	private ShardedJedisPool shardedJedisPool;
 	@Autowired(required=true)
 	private JedisCluster jedisCluster;
 
@@ -450,37 +449,7 @@ public class RedisUtil {
 		return isExist;
 	}
 
-	/**
-	 * 全局扫描hset
-	 *
-	 * @param match
-	 *            field匹配模式
-	 * @return
-	 */
-//	public List<Map.Entry<String, String>> scanHSet(String domain, String match) {
-//		ShardedJedis shardedJedis = null;
-//		try {
-//			int cursor = 0;
-//			shardedJedis = shardedJedisPool.getResource();
-//			ScanParams scanParams = new ScanParams();
-//			scanParams.match(match);
-//			Jedis jedis = shardedJedis.getShard(domain);
-//			ScanResult<Map.Entry<String, String>> scanResult;
-//			List<Map.Entry<String, String>> list = new ArrayList<Map.Entry<String, String>>();
-//			do {
-//				scanResult = jedis.hscan(domain, String.valueOf(cursor), scanParams);
-//				list.addAll(scanResult.getResult());
-//				cursor = Integer.parseInt(scanResult.getStringCursor());
-//			} while (cursor > 0);
-//			return list;
-//		} catch (Exception ex) {
-//			LOGGER.error("scanHSet error.", ex);
-//			returnBrokenResource(shardedJedis);
-//		} finally {
-//			returnResource(shardedJedis);
-//		}
-//		return null;
-//	}
+
 
 	/**
 	 * 返回 domain 指定的哈希集中所有字段的value值
@@ -721,19 +690,5 @@ public class RedisUtil {
 		return 0;
 	}
 
-//	private void returnBrokenResource(ShardedJedis shardedJedis) {
-//		try {
-//			jedisCluster.returnBrokenResource(shardedJedis);
-//		} catch (Exception e) {
-//			LOGGER.error("returnBrokenResource error.", e);
-//		}
-//	}
 
-//	private void returnResource(ShardedJedis shardedJedis) {
-//		try {
-//			shardedJedisPool.returnResource(shardedJedis);
-//		} catch (Exception e) {
-//			LOGGER.error("returnResource error.", e);
-//		}
-//	}
 }

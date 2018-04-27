@@ -21,7 +21,7 @@
         <!--滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
-            <fileNamePattern>./log/xsy-restaurant-pos-info.%d.log</fileNamePattern>
+            <fileNamePattern>./log/xsy-test-pos-info.%d.log</fileNamePattern>
         </rollingPolicy>
     </appender>
 
@@ -37,7 +37,7 @@
         <!--滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
-            <fileNamePattern>./log/xsy-restaurant-pos-warn.%d.log</fileNamePattern>
+            <fileNamePattern>./log/xsy-test-pos-warn.%d.log</fileNamePattern>
         </rollingPolicy>
     </appender>
 
@@ -52,7 +52,7 @@
         <!--滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
-            <fileNamePattern>./log/xsy-restaurant-pos-error.%d.log</fileNamePattern>
+            <fileNamePattern>./log/xsy-test-pos-error.%d.log</fileNamePattern>
         </rollingPolicy>
     </appender>
     <root level="info">
