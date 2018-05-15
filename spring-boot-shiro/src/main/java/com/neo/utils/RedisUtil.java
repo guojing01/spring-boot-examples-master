@@ -1,5 +1,6 @@
 package com.neo.utils;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -688,6 +689,38 @@ public class RedisUtil {
 			LOGGER.error("incr error.", ex);
 		}
 		return 0;
+	}
+
+	/**
+	 * jedisCluster都是以json字符串形式存入的，这个地方进行json和bean的转换
+	 * @param key
+	 * @param clazz
+	 * @return
+	 */
+	public Object get(String key, Class<?> clazz) {
+		String json = jedisCluster.get(key);
+		if (StringUtils.isNotEmpty(json)) {
+			return JsonUtil.Json2Object(json, clazz);
+		} else {
+			return null;
+		}
+	}
+	/**
+	 * jedisCluster都是以json字符串形式存入的，这个地方进行json和bean的转换
+	 * @return
+	 */
+	public void set(String key, Object o) {
+		String json = JsonUtil.Object2Json(o);
+		jedisCluster.set(key, json);
+	}
+	/**
+	 * jedisCluster都是以json字符串形式存入的，这个地方进行json和bean的转换
+	 * @return
+	 */
+	public void setAndExpire(String key, Object o, int expire) {
+		String json = JsonUtil.Object2Json(o);
+		jedisCluster.set(key, json);
+		jedisCluster.expire(key, expire);
 	}
 
 
