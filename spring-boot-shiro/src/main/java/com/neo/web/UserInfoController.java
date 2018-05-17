@@ -1,7 +1,6 @@
 package com.neo.web;
 
 import com.neo.entity.UserInfo;
-import com.neo.entity.UserTest;
 import com.neo.utils.RedisUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +29,8 @@ public class UserInfoController extends BaseController{
         /**
          * 测试存入bean对象的转换操作
          */
-        UserTest userTest = new UserTest();
-        userTest.setName("jack");
-        userTest.setPassword("123456");
-        userTest.setUid(21212);
-        userTest.setUsername("qwewqe");
-        redisUtil.set("testrose",userTest);
-        UserTest userinfo = (UserTest)redisUtil.get("testrose",UserTest.class);
+        redisUtil.set("testrose",user);
+        UserInfo userinfo = (UserInfo)redisUtil.get("testrose",UserInfo.class);
         System.out.println("===测试redis集群userinfo===" + userinfo.toString());
         System.out.println("======" + user.getName());
         Integer userId = this.getCurrentUserId();

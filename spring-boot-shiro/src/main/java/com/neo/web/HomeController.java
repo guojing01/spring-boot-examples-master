@@ -25,8 +25,8 @@ import java.util.Map;
 @Controller
 public class HomeController extends BaseController{
     private final static Logger log = LoggerFactory.getLogger(RedisUtil.class);
-    @Autowired
-    private RedisUtil redisUtil;
+//    @Autowired
+//    private RedisUtil redisUtil;
 
     @RequestMapping("/login")
     @ResponseBody
