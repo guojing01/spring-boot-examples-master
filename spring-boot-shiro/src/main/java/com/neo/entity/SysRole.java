@@ -1,8 +1,10 @@
 package com.neo.entity;
 
 
-import java.io.Serializable;
+import lombok.Data;
 
+import java.io.Serializable;
+@Data
 public class SysRole implements Serializable {
     private static final long serialVersionUID = 1L;
     private Integer id; // 编号
@@ -11,36 +13,5 @@ public class SysRole implements Serializable {
     private Boolean available = Boolean.FALSE; // 是否可用,如果不可用将不会添加给用户
 
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Boolean getAvailable() {
-        return available;
-    }
-
-    public void setAvailable(Boolean available) {
-        this.available = available;
-    }
 
 }

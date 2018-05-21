@@ -715,6 +715,7 @@ public class RedisUtil {
 	}
 	/**
 	 * jedisCluster都是以json字符串形式存入的，这个地方进行json和bean的转换
+	 * 失效时间单位是秒
 	 * @return
 	 */
 	public void setAndExpire(String key, Object o, int expire) {

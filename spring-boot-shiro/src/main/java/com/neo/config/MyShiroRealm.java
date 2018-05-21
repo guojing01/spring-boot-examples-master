@@ -1,6 +1,5 @@
 package com.neo.config;
 
-import com.neo.entity.SysPermission;
 import com.neo.entity.SysRole;
 import com.neo.entity.UserInfo;
 import com.neo.mapper.SysPermissionMapper;
@@ -17,12 +16,12 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Set;
 
 public class MyShiroRealm extends AuthorizingRealm {
+    @Autowired
+    private RedisUtil redisUtil;
     @Autowired
     private UserInfoMapper userMapper;
 
@@ -63,7 +62,11 @@ public class MyShiroRealm extends AuthorizingRealm {
         //通过username从数据库中查找 User对象，如果找到，没找到.
         //实际项目中，这里可以根据实际情况做缓存，如果不做，Shiro自己也是有时间间隔机制，2分钟内不会重复执行该方法
         //到数据库查是否有此对象
-        UserInfo userInfo=userMapper.selectOne(username);
+        UserInfo userInfo = (UserInfo) redisUtil.get("userinfo:"+username,UserInfo.class);
+        if(userInfo==null){
+            userInfo=userMapper.selectOne(username);
+            redisUtil.setAndExpire("userinfo:"+username,userInfo,60*60);//缓存一个小时
+        }
         System.out.println("----->>userInfo="+userInfo);
         if(userInfo == null){
             return null;

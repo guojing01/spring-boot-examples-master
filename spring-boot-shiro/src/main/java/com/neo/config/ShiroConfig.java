@@ -1,15 +1,17 @@
 package com.neo.config;
 
+import com.neo.config.redis.RedisCacheManager;
+import com.neo.config.redis.RedisManager;
+import com.neo.config.redis.RedisSessionDAO;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
-import org.crazycake.shiro.RedisCacheManager;
-import org.crazycake.shiro.RedisManager;
-import org.crazycake.shiro.RedisSessionDAO;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -40,7 +42,7 @@ public class ShiroConfig {
 //    public UserRealm getUserRealm() {
 //        return new UserRealm();
 //    }
-
+	//单位是秒
     private static final int sessionTimeout = 1800;
 
 	@Bean
@@ -71,7 +73,10 @@ public class ShiroConfig {
 		return shiroFilterFactoryBean;
 	}
 
-
+	/**
+	 * 这个地方必须用静态方法，否则redis获取资源会报错
+	 * @return
+	 */
     @Bean
     public static LifecycleBeanPostProcessor getLifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();
@@ -82,12 +87,41 @@ public class ShiroConfig {
 		DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
 		//设置realm.
 		securityManager.setRealm(myShiroRealm());
-		// 自定义缓存实现 使用redis
-//		securityManager.setCacheManager(cacheManager());
+		// 自定义缓存实现 使用redis默认是ehcatch
+		securityManager.setCacheManager(cacheManager());
 		// 自定义session管理 使用redis
 		securityManager.setSessionManager(sessionManager());
+		//自定义记住我功能
+//		securityManager.setRememberMeManager(rememberMeManager());
 		return securityManager;
 	}
+
+	/**
+	 * 设置rememberMeCookie
+	 * @return
+	 */
+//	@Bean(name = "rememberMeCookie")
+//	public SimpleCookie rememberMeCookie() {
+//		// 这个参数是cookie的名称，对应前端的checkbox的name = rememberMe
+//		SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+//		// <!-- 记住我cookie生效时间30天 ,单位秒;-->
+//		simpleCookie.setMaxAge(259200);
+//		return simpleCookie;
+//	}
+
+	/**
+	 * cookie管理对象;
+	 *
+	 * @return
+	 */
+//	@Bean(name = "rememberMeManager")
+//	public CookieRememberMeManager rememberMeManager() {
+//		CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+//		cookieRememberMeManager.setCookie(rememberMeCookie());
+//		return cookieRememberMeManager;
+//	}
+
+
 	/**
 	 * 配置shiro redisManager
 	 * 使用的是shiro-redis开源插件
@@ -97,7 +131,7 @@ public class ShiroConfig {
 		RedisManager redisManager = new RedisManager();
 		redisManager.setHost(host);
 		redisManager.setPort(port);
-		redisManager.setExpire(1800);// 配置缓存过期时间
+		redisManager.setExpire(sessionTimeout);// 配置缓存过期时间
 		redisManager.setTimeout(timeout);
 		redisManager.setPassword(password);
 		return redisManager;
@@ -132,7 +166,16 @@ public class ShiroConfig {
 	@Bean
 	public DefaultWebSessionManager sessionManager() {
 		DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-		sessionManager.setSessionDAO(redisSessionDAO());
+
+		sessionManager.setSessionDAO(redisSessionDAO());// 设置SessionDao
+		/**
+		 * 加入缓存管理器，这个地方实现setCacheManager的功能和setSessionDAO相同，
+		 * 只不过2个方法生效的优先级不一样，自定义缓存可以直接忽略这个设置
+		 */
+//		sessionManager.setCacheManager(cacheManager());
+		sessionManager.setGlobalSessionTimeout(1800000);//全局session失效时间
+		sessionManager.setDeleteInvalidSessions(true);// 删除过期的session
+		sessionManager.setSessionValidationSchedulerEnabled(true);// 是否定时检查session默认是一个小时
 		return sessionManager;
 	}
 
@@ -208,4 +251,9 @@ public class ShiroConfig {
 		//r.setWarnLogCategory("example.MvcLogger");     // No default
 		return r;
 	}
+
+
+
+
+
 }

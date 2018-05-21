@@ -60,9 +60,9 @@ public class HomeController extends BaseController{
                 session.setAttribute("currentUserInfo", userinfo);
                 session.setAttribute("currentUserID", userinfo.getUid());
                 session.setTimeout(1800000L);//毫秒   30分钟
-                map.put("token", currentUser.getSession().getId());
-                map.put("msg", "登录成功");
             }
+            map.put("token", currentUser.getSession().getId());
+            map.put("msg", "登录成功");
         } catch (UnknownAccountException var9) {
             var9.printStackTrace();
             map.put("msg", "账户不存在！");
