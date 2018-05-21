@@ -52,7 +52,7 @@ public class ShiroConfig {
 	//单位是秒,3个小时
     private static final int redisTimeout = 3 * 60 * 60;
     //shiro中session的全局失效时间单位毫秒，
-	private static final long shiroSessionTimeout = 60 * 60 * 1000L;
+//	private static final long shiroSessionTimeout =  1 * 60 * 1000L;
 
 	@Bean
 	public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
@@ -189,8 +189,12 @@ public class ShiroConfig {
 		 * 只不过2个方法生效的优先级不一样，自定义缓存可以直接忽略这个设置
 		 */
 //		sessionManager.setCacheManager(cacheManager());
-		//全局session失效时间单位毫秒 30分钟
-		sessionManager.setGlobalSessionTimeout(shiroSessionTimeout);
+		/**
+		 * 全局session失效时间单位毫秒
+		 * 使用了redis管理session，redisSessionDAO
+		 * 中已经将redis的失效时间设置成了session的失效时间
+		 */
+//		sessionManager.setGlobalSessionTimeout(shiroSessionTimeout);
 		sessionManager.setDeleteInvalidSessions(true);// 删除过期的session
 		sessionManager.setSessionValidationSchedulerEnabled(true);// 是否定时检查session默认是一个小时
 		return sessionManager;

@@ -30,6 +30,8 @@ public class MyShiroRealm extends AuthorizingRealm {
 
     @Autowired
     private SysPermissionMapper permissionMapper;
+    //userinfo在redis中的缓存时间 单位是秒
+    private static final int USERINFO_EXPIRE= 60 * 60;
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
@@ -65,7 +67,7 @@ public class MyShiroRealm extends AuthorizingRealm {
         UserInfo userInfo = (UserInfo) redisUtil.get("userinfo:"+username,UserInfo.class);
         if(userInfo==null){
             userInfo=userMapper.selectOne(username);
-            redisUtil.setAndExpire("userinfo:"+username,userInfo,60*60);//缓存一个小时
+            redisUtil.setAndExpire("userinfo:"+username,userInfo,USERINFO_EXPIRE);
         }
         System.out.println("----->>userInfo="+userInfo);
         if(userInfo == null){
