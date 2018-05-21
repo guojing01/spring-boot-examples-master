@@ -59,7 +59,6 @@ public class HomeController extends BaseController{
                 Session session = currentUser.getSession();
                 session.setAttribute("currentUserInfo", userinfo);
                 session.setAttribute("currentUserID", userinfo.getUid());
-                session.setTimeout(1800000L);//毫秒   30分钟
             }
             map.put("token", currentUser.getSession().getId());
             map.put("msg", "登录成功");

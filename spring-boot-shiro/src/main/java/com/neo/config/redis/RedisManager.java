@@ -27,6 +27,8 @@ public class RedisManager {
 
     private static JedisPool jedisPool = null;
 
+    private JedisPoolConfig jedisPoolConfig = null;
+
     public RedisManager(){
 
     }
@@ -37,11 +39,11 @@ public class RedisManager {
     public void init(){
         if(jedisPool == null){
             if(password != null && !"".equals(password)){
-                jedisPool = new JedisPool(new JedisPoolConfig(), host, port, timeout, password);
+                jedisPool = new JedisPool(jedisPoolConfig!=null?jedisPoolConfig:new JedisPoolConfig(), host, port, timeout, password);
             }else if(timeout != 0){
-                jedisPool = new JedisPool(new JedisPoolConfig(), host, port,timeout);
+                jedisPool = new JedisPool(jedisPoolConfig!=null?jedisPoolConfig:new JedisPoolConfig(), host, port,timeout);
             }else{
-                jedisPool = new JedisPool(new JedisPoolConfig(), host, port);
+                jedisPool = new JedisPool(jedisPoolConfig!=null?jedisPoolConfig:new JedisPoolConfig(), host, port);
             }
 
         }
@@ -196,4 +198,11 @@ public class RedisManager {
         this.password = password;
     }
 
+    public JedisPoolConfig getJedisPoolConfig() {
+        return jedisPoolConfig;
+    }
+
+    public void setJedisPoolConfig(JedisPoolConfig jedisPoolConfig) {
+        this.jedisPoolConfig = jedisPoolConfig;
+    }
 }

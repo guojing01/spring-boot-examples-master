@@ -17,13 +17,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
+import redis.clients.jedis.JedisPoolConfig;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
 @Configuration
 public class ShiroConfig {
-
 
 
     @Value("${spring.redis.host}")
@@ -38,12 +39,20 @@ public class ShiroConfig {
 	@Value("${spring.redis.password}")
 	private String password;
 
+	@Value("${spring.redis.pool.max-idle}")
+	private int maxIdle;
+
+	@Value("${spring.redis.pool.max-wait}")
+	private long maxWaitMillis;
+
 //    @Bean
 //    public UserRealm getUserRealm() {
 //        return new UserRealm();
 //    }
-	//单位是秒
-    private static final int sessionTimeout = 1800;
+	//单位是秒,3个小时
+    private static final int redisTimeout = 3 * 60 * 60;
+    //shiro中session的全局失效时间单位毫秒，
+	private static final long shiroSessionTimeout = 60 * 60 * 1000L;
 
 	@Bean
 	public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
@@ -128,12 +137,19 @@ public class ShiroConfig {
 	 * @return
 	 */
 	public RedisManager redisManager() {
+		//设置redis的配置
+		JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+		jedisPoolConfig.setMaxIdle(maxIdle);
+		jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
+		//设置redis的连接
 		RedisManager redisManager = new RedisManager();
+		redisManager.setJedisPoolConfig(jedisPoolConfig);
 		redisManager.setHost(host);
 		redisManager.setPort(port);
-		redisManager.setExpire(sessionTimeout);// 配置缓存过期时间
+		redisManager.setExpire(redisTimeout);// 配置缓存过期时间
 		redisManager.setTimeout(timeout);
 		redisManager.setPassword(password);
+
 		return redisManager;
 	}
 
@@ -173,7 +189,8 @@ public class ShiroConfig {
 		 * 只不过2个方法生效的优先级不一样，自定义缓存可以直接忽略这个设置
 		 */
 //		sessionManager.setCacheManager(cacheManager());
-		sessionManager.setGlobalSessionTimeout(1800000);//全局session失效时间
+		//全局session失效时间单位毫秒 30分钟
+		sessionManager.setGlobalSessionTimeout(shiroSessionTimeout);
 		sessionManager.setDeleteInvalidSessions(true);// 删除过期的session
 		sessionManager.setSessionValidationSchedulerEnabled(true);// 是否定时检查session默认是一个小时
 		return sessionManager;
