@@ -36,10 +36,16 @@ public class HomeController extends BaseController{
         Subject currentUser = SecurityUtils.getSubject();
 
         try {
+            /**
+             * 可以在此处实现自己的登陆验证逻辑
+             */
             if (!currentUser.isAuthenticated()) {
                 UsernamePasswordToken token = new UsernamePasswordToken(username, password);
                 //this is all you have to do to support 'remember me' (no config - built in!):
 //                token.setRememberMe(true);
+                /**
+                 * 调用shiro的登陆方法，就是对应MyShiroRealm。doGetAuthenticationInfo方法
+                 */
                 currentUser.login(token);
                 //判断用户是否有角色
 //                if ( currentUser.hasRole( "schwartz" ) ) {
@@ -104,9 +110,11 @@ public class HomeController extends BaseController{
         Map<String, Object> map = new HashMap();
         //在这里执行退出系统前需要清空的数据
         try {
+
             UserInfo userinfo = getCurrentUser();
             Subject subject = SecurityUtils.getSubject();
             if (subject.isAuthenticated()) {
+
                 subject.logout(); // session 会销毁，在SessionListener监听session销毁，清理权限缓存
             }
             map.put("code", "1000002");

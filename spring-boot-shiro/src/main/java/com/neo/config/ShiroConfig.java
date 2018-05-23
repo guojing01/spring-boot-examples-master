@@ -217,7 +217,7 @@ public class ShiroConfig {
 
 
     /**
-	 * 凭证匹配器
+	 * 密码凭证匹配器，如果不希望使用shiro进行密码验证而是自己实现业务逻辑的话，这个不用设置
 	 * （由于我们的密码校验交给Shiro的SimpleAuthenticationInfo进行处理了
 	 * ）
 	 * @return
@@ -233,7 +233,10 @@ public class ShiroConfig {
 	@Bean
 	public MyShiroRealm myShiroRealm(){
 		MyShiroRealm myShiroRealm = new MyShiroRealm();
-		myShiroRealm.setCredentialsMatcher(hashedCredentialsMatcher());
+		/**
+		 * 密码凭证匹配器，如果不希望使用shiro进行密码验证而是自己实现业务逻辑的话，这个不用设置
+		 */
+//		myShiroRealm.setCredentialsMatcher(hashedCredentialsMatcher());
 		return myShiroRealm;
 	}
 
