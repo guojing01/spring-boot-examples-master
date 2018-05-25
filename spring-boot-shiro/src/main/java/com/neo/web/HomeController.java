@@ -111,14 +111,14 @@ public class HomeController extends BaseController{
         //在这里执行退出系统前需要清空的数据
         try {
 
-            UserInfo userinfo = getCurrentUser();
+//            UserInfo userinfo = getCurrentUser();
             Subject subject = SecurityUtils.getSubject();
             if (subject.isAuthenticated()) {
 
                 subject.logout(); // session 会销毁，在SessionListener监听session销毁，清理权限缓存
             }
             map.put("code", "1000002");
-            map.put("msg", userinfo.getUsername() + "退出登录成功！");
+            map.put("msg", "退出登录成功！");
             return map;
         } catch (Exception e) {
             log.info("退出登录失败！");

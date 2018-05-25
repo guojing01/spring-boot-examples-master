@@ -28,11 +28,20 @@ public class JedisClusterConfig {
     private String clusterNodes;
     @Value("${spring.redis.cache.commandTimeout}")
     private String commandTimeout;
-
-    private int soTimeout;
-    private  String maxAttempts="5";
     @Value("${spring.redis.cache.password}")
     private String pass;
+
+    @Value("${spring.redis.cache.so.timeout}")
+    private String soTimeout;
+    @Value("${spring.redis.cache.max.attempts}")
+    private  String maxAttempts;
+
+    @Value("${spring.redis.cache.max.idle}")
+    private String maxIdle;
+    @Value("${spring.redis.cache.min.idle}")
+    private String minIdle;
+    @Value("${spring.redis.cache.max.total}")
+    private String maxTotal;
 
     @Bean
     public JedisCluster getJedisCluster() {
@@ -43,7 +52,10 @@ public class JedisClusterConfig {
             nodes.add(new HostAndPort(ipPortPair[0].trim(),Integer.valueOf(ipPortPair[1].trim())));
         }
         GenericObjectPoolConfig config = new GenericObjectPoolConfig();
-        JedisCluster jedisCluster = new JedisCluster(nodes, Integer.parseInt(commandTimeout),soTimeout
+        config.setMaxIdle(Integer.parseInt(maxIdle));
+        config.setMaxTotal(Integer.parseInt(maxTotal));
+        config.setMinIdle(Integer.parseInt(minIdle));
+        JedisCluster jedisCluster = new JedisCluster(nodes, Integer.parseInt(commandTimeout),Integer.parseInt(soTimeout)
                 ,Integer.parseInt(maxAttempts),pass,config);
         return jedisCluster;
     }

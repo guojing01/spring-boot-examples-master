@@ -6,10 +6,7 @@ import com.neo.mapper.SysPermissionMapper;
 import com.neo.mapper.SysRoleMapper;
 import com.neo.mapper.UserInfoMapper;
 import com.neo.utils.RedisUtil;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -55,12 +52,16 @@ public class MyShiroRealm extends AuthorizingRealm {
 
     /*主要是用来进行身份认证的，也就是说验证用户输入的账号和密码是否正确。*/
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token)
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken)
             throws AuthenticationException {
         System.out.println("MyShiroRealm.doGetAuthenticationInfo()");
-        //获取用户的输入的账号.
-        String username = (String)token.getPrincipal();
-        System.out.println(token.getCredentials());
+        // 将AuthenticationToken转化为UsernamePasswordToken
+        UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
+        String username = token.getUsername().trim();
+        String password = "";
+        if (token.getPassword() != null) {
+            password = new String(token.getPassword());
+        }
         //通过username从数据库中查找 User对象，如果找到，没找到.
         //实际项目中，这里可以根据实际情况做缓存，如果不做，Shiro自己也是有时间间隔机制，2分钟内不会重复执行该方法
         //到数据库查是否有此对象
@@ -75,7 +76,7 @@ public class MyShiroRealm extends AuthorizingRealm {
         }
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
                 userInfo, //用户名
-                userInfo.getPassword(), //密码
+                password.toCharArray(),
                 /**
                  * 这个地方是shiro密码验证的加密器进行加盐
                  */

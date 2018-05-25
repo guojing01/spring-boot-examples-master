@@ -2,6 +2,11 @@ package com.neo.web;
 import com.neo.entity.UserInfo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
+
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * @Author: renchunbao
  * @Description:
@@ -19,6 +24,8 @@ public class BaseController {
     }
 
     public Integer getCurrentUserId() {
+
+
         Session session = SecurityUtils.getSubject().getSession();
         Integer userId = (Integer)session.getAttribute(CURRENT_USER_ID);
         return userId;
