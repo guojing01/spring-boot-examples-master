@@ -1,4 +1,3 @@
-
 CREATE TABLE `sys_permission` (
    `id` int(11) NOT NULL AUTO_INCREMENT,
    `available` bit(1) DEFAULT NULL,
@@ -11,8 +10,6 @@ CREATE TABLE `sys_permission` (
    PRIMARY KEY (`id`)
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
-
-
 CREATE TABLE `sys_role` (
    `id` int(11) NOT NULL AUTO_INCREMENT,
    `available` bit(1) DEFAULT NULL,
@@ -21,9 +18,6 @@ CREATE TABLE `sys_role` (
    PRIMARY KEY (`id`)
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
-
-
-
 CREATE TABLE `sys_role_permission` (
    `role_id` int(11) NOT NULL,
    `permission_id` int(11) NOT NULL,
@@ -31,17 +25,12 @@ CREATE TABLE `sys_role_permission` (
    KEY `FK9q28ewrhntqeipl1t04kh1be7` (`role_id`),
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
-
-
 CREATE TABLE `sys_user_role` (
    `uid` int(11) NOT NULL,
    `role_id` int(11) NOT NULL,
    KEY `FKhh52n8vd4ny9ff4x9fb8v65qx` (`role_id`),
    KEY `FKgkmyslkrfeyn9ukmolvek8b8f` (`uid`),
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8
-
-
-
 
 CREATE TABLE `user_info` (
    `uid` int(11) NOT NULL AUTO_INCREMENT,
@@ -53,24 +42,6 @@ CREATE TABLE `user_info` (
    PRIMARY KEY (`uid`),
    UNIQUE KEY `UK_f2ksd6h8hsjtd57ipfq9myr64` (`username`)
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
