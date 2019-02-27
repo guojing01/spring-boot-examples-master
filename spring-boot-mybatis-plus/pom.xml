@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.neo</groupId>
-	<artifactId>spring-boot-mybatis-annotation</artifactId>
+	<artifactId>spring-boot-mybatis-plus</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
@@ -14,13 +14,14 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.4.1.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<version>2.0.3.RELEASE</version>
+		<relativePath/>
 	</parent>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
+		<mainClass>com.neo.Application</mainClass>
 	</properties>
 
 	<dependencies>
@@ -34,56 +35,97 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-	        <groupId>org.springframework.boot</groupId>
-	        <artifactId>spring-boot-starter-web</artifactId>
-	    </dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
 		<dependency>
-			<groupId>org.mybatis.spring.boot</groupId>
-			<artifactId>mybatis-spring-boot-starter</artifactId>
-			<version>1.1.1</version>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.1.0</version>
 		</dependency>
-	     <dependency>
-	        <groupId>mysql</groupId>
-	        <artifactId>mysql-connector-java</artifactId>
-	    </dependency>
-	     <dependency>
-	        <groupId>org.springframework.boot</groupId>
-	        <artifactId>spring-boot-devtools</artifactId>
-	        <optional>true</optional>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
 		</dependency>
+
+
+
+		<!--<dependency>-->
+			<!--<groupId>org.springframework</groupId>-->
+			<!--<artifactId>spring-web</artifactId>-->
+			<!--<version>5.0.6.RELEASE</version>-->
+			<!--<scope>compile</scope>-->
+		<!--</dependency>-->
+
+
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>4.3.11.RELEASE</version>
+		</dependency>
+
+
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind </artifactId>
+			<version>2.8.9 </version>
+		</dependency>
+
+		<!-- 自动生成代码   start    -->
+
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-generator</artifactId>
+            <version>3.1.0</version>
+		</dependency>
+
+		<!-- velocity 模板引擎, 默认 -->
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity-engine-core</artifactId>
+			<version>2.0</version>
+		</dependency>
+		<!-- freemarker 模板引擎 -->
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+			<version>2.3.28</version>
+		</dependency>
+		<!-- beetl 模板引擎 -->
+		<dependency>
+			<groupId>com.ibeetl</groupId>
+			<artifactId>beetl</artifactId>
+			<version>2.9.8</version>
+		</dependency>
+
+		<!-- 自动生成代码   end    -->
+
+
 	</dependencies>
-	
+
+	<repositories>
+		<repository>
+			<id>snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+		</repository>
+	</repositories>
+
+
 	<build>
-	  <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <excludes>
-					<exclude>bootstrap-test.properties</exclude>
-                    <exclude>bootstrap-dev.properties</exclude>
-                    <exclude>bootstrap-pro.properties</exclude>
-                    <exclude>bootstrap.properties</exclude>
-                </excludes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>bootstrap-${env}.properties</include>
-                    <include>bootstrap.properties</include>
-                </includes>
-            </resource>
-        </resources>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-	                <fork>true</fork>
-	            </configuration>
-			</plugin>
-		</plugins>
+		<resources>
+			<!--指定资源的位置（xml放在resources下，可以不用指定）-->
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
 	</build>
+
+
+
 	
 
 </project>

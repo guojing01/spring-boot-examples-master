@@ -1,0 +1,35 @@
+# DataSource Config
+server:
+  port: 8089
+
+
+
+#mybatis-plus和mybatis不一样
+#mybatis
+#mybatis:
+#  mapper-locations: classpath*:/mapper/*.xml
+#  config-location: classpath:mybatis/mybatis-config.xml
+
+
+
+
+#mybatis-plus
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+
+
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://rds04-mysql-shinho-dcloud-uat-az1.c0dvigf5kjq0.rds.cn-north-1.amazonaws.com.cn:3306/c4i?useSSL=false
+    username: c4i
+    password: ###
+
+
+
+
+
+
+

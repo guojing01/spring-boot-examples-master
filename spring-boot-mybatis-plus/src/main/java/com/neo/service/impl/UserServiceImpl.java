@@ -4,7 +4,10 @@ import com.neo.entity.User;
 import com.neo.mapper.UserMapper;
 import com.neo.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +20,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
+    @Autowired
+    private UserMapper userMapper;
+
+    @Override
+    public List<User> getAllTestXml(User user) {
+        return userMapper.getAllTestXml(user);
+    }
 }

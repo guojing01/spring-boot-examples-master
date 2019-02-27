@@ -1,4 +1,4 @@
-package com.neo.web;
+package com.neo.controller;
 
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
@@ -45,7 +45,9 @@ public class CodeGenerator {
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
+        //生成文件的输出目录
         gc.setOutputDir(projectPath + "/src/main/java");
+        //开发人员
         gc.setAuthor("rcb");
         gc.setOpen(false);
         mpg.setGlobalConfig(gc);
@@ -56,7 +58,7 @@ public class CodeGenerator {
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.jdbc.Driver");
         dsc.setUsername("c4i");
-        dsc.setPassword("Password2017");
+        dsc.setPassword("###");
         mpg.setDataSource(dsc);
 
         // 包路径配置
@@ -107,16 +109,26 @@ public class CodeGenerator {
 
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
+        //数据库表映射到实体的命名策略
         strategy.setNaming(NamingStrategy.underline_to_camel);
+        //数据库表字段映射到实体的命名策略, 未指定按照 naming 执行
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-        strategy.setSuperEntityClass("com.baomidou.ant.common.BaseEntity");
+        //自定义继承的Entity类全称，带包名
+//        strategy.setSuperEntityClass("com.baomidou.ant.common.BaseEntity");
+        //【实体】是否为lombok模型（默认 false）
         strategy.setEntityLombokModel(true);
+        //生成 @RestController 控制器
         strategy.setRestControllerStyle(true);
-        strategy.setSuperControllerClass("com.baomidou.ant.common.BaseController");
+        //自定义继承的Controller类全称，带包名
+//        strategy.setSuperControllerClass("com.baomidou.ant.common.BaseController");
 //        strategy.setInclude(scanner("表名"));
-        strategy.setInclude("user");
+        //需要包含的表名，允许正则表达式
+        strategy.setInclude("user","user_info");
+        //自定义基础的Entity类，公共字段
         strategy.setSuperEntityColumns("id");
+        //驼峰转连字符
         strategy.setControllerMappingHyphenStyle(true);
+        //表前缀  strategy.setTablePrefix("tb_");
         strategy.setTablePrefix(pc.getModuleName() + "_");
         mpg.setStrategy(strategy);
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());

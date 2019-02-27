@@ -1,30 +1,19 @@
-/*
-Navicat MySQL Data Transfer
+DROP TABLE IF EXISTS user;
 
-Source Server         : 本地
-Source Server Version : 50505
-Source Host           : localhost:3306
-Source Database       : test1
+CREATE TABLE user
+(
+	id BIGINT(20) NOT NULL COMMENT '主键ID',
+	name VARCHAR(30) NULL DEFAULT NULL COMMENT '姓名',
+	age INT(11) NULL DEFAULT NULL COMMENT '年龄',
+	email VARCHAR(50) NULL DEFAULT NULL COMMENT '邮箱',
+	PRIMARY KEY (id)
+);
 
-Target Server Type    : MYSQL
-Target Server Version : 50505
-File Encoding         : 65001
+DELETE FROM user;
 
-Date: 2016-11-05 21:17:33
-*/
-
-SET FOREIGN_KEY_CHECKS=0;
-
--- ----------------------------
--- Table structure for `users`
--- ----------------------------
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE `users` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `userName` varchar(32) DEFAULT NULL COMMENT '用户名',
-  `passWord` varchar(32) DEFAULT NULL COMMENT '密码',
-  `user_sex` varchar(32) DEFAULT NULL,
-  `nick_name` varchar(32) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
-
+INSERT INTO user (id, name, age, email) VALUES
+(1, 'Jone', 18, 'test1@baomidou.com'),
+(2, 'Jack', 20, 'test2@baomidou.com'),
+(3, 'Tom', 28, 'test3@baomidou.com'),
+(4, 'Sandy', 21, 'test4@baomidou.com'),
+(5, 'Billie', 24, 'test5@baomidou.com');
